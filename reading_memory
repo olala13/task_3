@@ -1,0 +1,13 @@
+#include <stdio.h>
+#include <sys/shm.h>
+#include <sys/ipc.h>
+
+int main(int argc, char *argv[]) {
+	
+    key_t key = ftok("/bin/cat", 0);
+	int desc = shmget(key, 1 , 0666 | IPC_CREAT);
+	char* ptr = (char*)shmat(desc, NULL, 0);
+    printf("%s\n", ptr);
+    shmdt(ptr);
+    shmctl(desc, IPC_RMID, NULL); //  удаление области разделяемой памяти из системы 
+}
